@@ -1,0 +1,8 @@
+name: ImprovedKeepAlive
+description: Improves the method in which players stay connected to the server
+version: 1.0.0
+main: co.technove.plugins.ImprovedKeepAlive
+api-version: 1.16
+
+depend:
+  - ProtocolLib

@@ -1,0 +1,2 @@
+# The interval in milliseconds between sending keepalive packets
+interval: 10000
