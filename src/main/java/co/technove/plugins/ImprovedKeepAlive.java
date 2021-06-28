@@ -21,7 +21,7 @@ public class ImprovedKeepAlive extends JavaPlugin {
         this.packetInterval = getConfig().getLong("interval", 5000L);
 
         this.keepAliveTask = new KeepAliveTask(this);
-        this.keepAliveTask.runTaskTimerAsynchronously(this, 20L * 5L, 20L * 5);
+        this.keepAliveTask.runTaskTimerAsynchronously(this, this.packetInterval, this.packetInterval);
 
         this.protocolManager = ProtocolLibrary.getProtocolManager();
         this.keepAlivePacketAdapter = new KeepAlivePacketAdapter(this);
