@@ -2,6 +2,7 @@ package co.technove.plugins;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ImprovedKeepAlive extends JavaPlugin {
@@ -13,10 +14,22 @@ public class ImprovedKeepAlive extends JavaPlugin {
     private KeepAlivePacketAdapter keepAlivePacketAdapter;
     private ProtocolManager protocolManager;
     private long packetInterval;
+    private boolean isStartupCancel = false;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        final PluginManager pluginManager = getServer().getPluginManager();
+
+        if (pluginManager.getPlugin("TCPShield") != null) {
+            isStartupCancel = true;
+            getLogger().severe(
+                "ImprovedKeepAlive is incompatible with TCPShield! Automatically disabling."
+            );
+            pluginManager.disablePlugin(this);
+            return;
+        }
 
         this.packetInterval = getConfig().getLong("interval", 5000L);
 
@@ -30,6 +43,11 @@ public class ImprovedKeepAlive extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // If cancelling startup, these things haven't been initialized.
+        if (isStartupCancel) {
+            return;
+        }
+
         this.protocolManager.removePacketListeners(this);
         this.keepAliveTask.cancel();
         this.keepAlivePacketAdapter.shutdown();
